@@ -651,7 +651,7 @@ Flow *FlowManager::matchPacketToFlow(libtrace_packet_t *packet, uint8_t dir,
 	
 	/* Force ICMP flows to have port numbers of zero, rather than
 	 * whatever random values trace_get_X_port might give us */
-	if (trans_proto == 1 && dir == 0) {
+	if ((trans_proto == 1 || trans_proto == 50) && dir == 0) {
 		if (ip6) {
 			pkt_id = FlowId(ip6->ip_dst.s6_addr,ip6->ip_src.s6_addr,
 				0, 0, trans_proto, vlan_id, this->nextconnid,
@@ -662,7 +662,7 @@ Flow *FlowManager::matchPacketToFlow(libtrace_packet_t *packet, uint8_t dir,
 				0, 0, ip->ip_p, vlan_id, this->nextconnid,
 				dir);
                 }
-	} else if (trans_proto == 1) {
+	} else if (trans_proto == 1 || trans_proto == 50) {
 		if (ip6) {
 			pkt_id = FlowId(ip6->ip_src.s6_addr,ip6->ip_dst.s6_addr,
 				0, 0, trans_proto, vlan_id, this->nextconnid,
